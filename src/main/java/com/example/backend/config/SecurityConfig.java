@@ -1,4 +1,4 @@
-package com.example.backend.Config;
+package com.example.backend.config;
 
 import com.example.backend.domain.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
