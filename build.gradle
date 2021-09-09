@@ -16,6 +16,8 @@ configurations {
 
 repositories {
     mavenCentral()
+    //아래 버전의 경우
+    maven { url "https://repo.spring.io/milestone" }
 }
 
 dependencies {
@@ -41,6 +43,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
+
+
+    implementation 'org.springframework.cloud:spring-cloud-security:2.0.0.M3'
 }
 
 test {

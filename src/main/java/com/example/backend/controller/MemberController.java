@@ -1,9 +1,9 @@
 package com.example.backend.controller;
 
-import com.example.backend.domain.UserRepository;
-import com.example.backend.domain.UserRequestDto;
-import com.example.backend.domain.UserRole;
-import com.example.backend.entity.User;
+import com.example.backend.domain.MemberRepository;
+import com.example.backend.domain.MemberRequestDto;
+import com.example.backend.domain.MemberRole;
+import com.example.backend.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,24 +16,24 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-public class UserController {
-    private final UserRepository userRepository;
+public class MemberController {
+    private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
     @PostMapping({"","/api/users"})
-    public User createMember(@RequestBody UserRequestDto requestDto){
-        User user =new User(requestDto);
-        UserRole role = new UserRole();
+    public Member createMember(@RequestBody MemberRequestDto requestDto){
+        Member member =new Member(requestDto);
+        MemberRole role = new MemberRole();
         role.setRoleName("BASIC");
-        user.setRoles(Arrays.asList(role));
-        user.setPw(passwordEncoder.encode(user.getPw()));
-        user.setStatus("정상");
-        userRepository.save(user);
-        return user;
+        member.setRoles(Arrays.asList(role));
+        member.setPw(passwordEncoder.encode(member.getPw()));
+        member.setStatus("정상");
+        memberRepository.save(member);
+        return member;
     }
 
     @GetMapping({"/api/user"})
-    public List<User> list(){ return userRepository.findAll();}
+    public List<Member> list(){ return memberRepository.findAll();}
 
     @GetMapping("/api/login")
     public void login(){

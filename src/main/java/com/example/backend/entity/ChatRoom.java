@@ -35,7 +35,7 @@ public class ChatRoom {
 
     @ManyToOne
     @JoinColumn(name="userdIdx")
-    private User user;
+    private Member member;
 
     @Column(nullable = true,columnDefinition = "varchar(200)")
     private String chatSource;

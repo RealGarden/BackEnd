@@ -39,5 +39,5 @@ public class Qna {
 
     @ManyToOne
     @JoinColumn(name="userIdx")
-    private User user;
+    private Member member;
 }

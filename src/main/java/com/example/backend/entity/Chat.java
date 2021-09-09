@@ -29,7 +29,7 @@ public class Chat{
 
     @JoinColumn(name="userdIdx")
     @ManyToOne
-    private User user;
+    private Member member;
 
     @JoinColumn(name="chatRoomIdx")
     @ManyToOne
