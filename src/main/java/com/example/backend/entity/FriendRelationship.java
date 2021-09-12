@@ -29,11 +29,11 @@ public class FriendRelationship {
 
     @JoinColumn(name="userdIdx")
     @ManyToOne
-    private User userUser;
+    private Member userMember;
 
     @JoinColumn(name="userdIdx")
     @ManyToOne
-    private User friendUser;
+    private Member friendMember;
 
 
     public FriendRelationship(FriendDto dto){

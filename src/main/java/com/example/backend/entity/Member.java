@@ -1,7 +1,7 @@
 package com.example.backend.entity;
 
-import com.example.backend.domain.UserRequestDto;
-import com.example.backend.domain.UserRole;
+import com.example.backend.domain.MemberRequestDto;
+import com.example.backend.domain.MemberRole;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -16,7 +16,7 @@ import java.util.List;
 @Entity
 @NoArgsConstructor //기본생성자
 @ToString
-public class User {
+public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -70,39 +70,40 @@ public class User {
     private String withrawReason;
 
     @OneToMany(cascade= CascadeType.ALL, fetch=FetchType.EAGER)
-    @JoinColumn(name="uid")
-    private List<UserRole> roles;
+    @JoinColumn(name="id")
+    private List<MemberRole> roles;
 
-    public User(String id, String pw, String name, int age, String phone, String email, String profile){
+    public Member(String id, String pw, String name, int age, String phone, String Uemail, String profile){
         this.id=id;
         this.pw=pw;
         this.name=name;
         this.age=age;
         this.phone=phone;
-        this.email=email;
+        this.email = Uemail;
         this.profile=profile;
     }
 
-    public User(UserRequestDto requestDto) {
+    public Member(MemberRequestDto requestDto) {
         this.profile=requestDto.getProfile();
         this.id=requestDto.getId();
         this.pw=requestDto.getPw();
         this.name=requestDto.getName();
         this.age=requestDto.getAge();
         this.phone=requestDto.getPhone();
-        this.email=requestDto.getEmail();
+        this.email =requestDto.getEmail();
         this.eventAlarm=true;
         this.friendAlarm=true;
         this.talkAlarm=true;
     }
 
-    public void update(UserRequestDto requestDto) {
+
+    public void update(MemberRequestDto requestDto) {
         this.profile=requestDto.getProfile();
         this.name=requestDto.getName();
         this.pw=requestDto.getPw();
         this.age=requestDto.getAge();
         this.phone=requestDto.getPhone();
-        this.email=requestDto.getEmail();
+        this.email =requestDto.getEmail();
     }
 
 }

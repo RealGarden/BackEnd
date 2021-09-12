@@ -13,7 +13,7 @@ import javax.persistence.Id;
 @Entity
 @EqualsAndHashCode(of = "rno")
 @ToString
-public class UserRole {
+public class MemberRole {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long rno;

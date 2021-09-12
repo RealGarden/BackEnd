@@ -41,7 +41,7 @@ public class CalendarRoom {
 
     @JoinColumn(name="userIdx")
     @ManyToOne
-    private User user;
+    private Member member;
 
     public CalendarRoom(CalendarRequestDto requestDto){
         this.start=requestDto.getStart();
