@@ -6,10 +6,7 @@ import com.example.backend.domain.MemberRole;
 import com.example.backend.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -20,7 +17,7 @@ public class MemberController {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
-    @PostMapping({"","/api/members"})
+    @PostMapping({"/api/members"})
     public Member createMember(@RequestBody MemberRequestDto requestDto){
         Member member =new Member(requestDto);
         MemberRole role = new MemberRole();
@@ -28,12 +25,13 @@ public class MemberController {
         member.setRoles(Arrays.asList(role));
         member.setPw(passwordEncoder.encode(member.getPw()));
         member.setStatus("정상");
+        System.out.println("정상등록");
         memberRepository.save(member);
         return member;
     }
 
     @GetMapping({"/api/members"})
-    public List<Member> list(){ return (List<Member>) memberRepository.findAll();}
+    public List<Member> list(){ return memberRepository.findAll();}
 
 
 

@@ -81,6 +81,9 @@ public class Member {
         this.phone=phone;
         this.email = Uemail;
         this.profile=profile;
+        this.eventAlarm=true;
+        this.friendAlarm=true;
+        this.talkAlarm=true;
     }
 
     public Member(MemberRequestDto requestDto) {
