@@ -27,11 +27,11 @@ public class FriendRelationship {
     @Column(nullable = true,columnDefinition = "varchar(20)")
     private String nickname;
 
-    @JoinColumn(name="userdIdx")
+    @JoinColumn(name="userMemberIdx")
     @ManyToOne
     private Member userMember;
 
-    @JoinColumn(name="userdIdx")
+    @JoinColumn(name="friendMemberIdx")
     @ManyToOne
     private Member friendMember;
 

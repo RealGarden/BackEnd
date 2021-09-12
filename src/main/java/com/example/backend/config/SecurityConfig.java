@@ -15,6 +15,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
@@ -27,9 +28,9 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.filter.CompositeFilter;
 
+import javax.servlet.Filter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Filter;
 
 @EnableWebSecurity
 @EnableOAuth2Client
@@ -62,7 +63,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .logout()
                 .and()
-                .addFilterBefore((javax.servlet.Filter) ssoFilter(), BasicAuthenticationFilter.class);
+                .addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);
     }
 
     @Bean
@@ -86,8 +87,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         List<Filter> filters = new ArrayList<>();
         filters.add(ssoFilter(facebook(), "/login/facebook"));
         filters.add(ssoFilter(github(), "/login/github"));
-        filter.setFilters((List<? extends javax.servlet.Filter>) filters);
-        return (Filter) filter;
+        filter.setFilters(filters);
+        return filter;
     }
 
     private Filter ssoFilter(ClientResources client, String path) {
@@ -98,7 +99,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 client.getResource().getUserInfoUri(), client.getClient().getClientId());
         tokenServices.setRestTemplate(template);
         filter.setTokenServices(tokenServices);
-        return (Filter) filter;
+        return filter;
     }
 
     class ClientResources {
@@ -133,10 +134,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         registration.setOrder(-100);
         return registration;
     }
-
-
-
-
-
-
 }

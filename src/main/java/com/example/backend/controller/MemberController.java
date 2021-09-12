@@ -33,7 +33,7 @@ public class MemberController {
     }
 
     @GetMapping({"/api/user"})
-    public List<Member> list(){ return memberRepository.findAll();}
+    public List<Member> list(){ return (List<Member>) memberRepository.findAll();}
 
     @GetMapping("/api/login")
     public void login(){

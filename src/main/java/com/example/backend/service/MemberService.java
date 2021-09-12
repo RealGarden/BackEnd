@@ -20,6 +20,6 @@ public class MemberService {
                 () -> new IllegalArgumentException("아이디가 존재하지 않습니다.")
         );
         member.update(requestDto);
-        return member.getUserIdx();
+        return member.getMemberIdx();
     }
 }
