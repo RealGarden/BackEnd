@@ -20,7 +20,7 @@ public class MemberController {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
-    @PostMapping({"","/api/users"})
+    @PostMapping({"","/api/members"})
     public Member createMember(@RequestBody MemberRequestDto requestDto){
         Member member =new Member(requestDto);
         MemberRole role = new MemberRole();
@@ -32,13 +32,9 @@ public class MemberController {
         return member;
     }
 
-    @GetMapping({"/api/user"})
+    @GetMapping({"/api/members"})
     public List<Member> list(){ return (List<Member>) memberRepository.findAll();}
 
-    @GetMapping("/api/login")
-    public void login(){
-        System.out.println("logggggg");
-    }
 
 
 }

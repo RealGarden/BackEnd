@@ -1,10 +1,58 @@
 <!DOCTYPE html>
-<html lang="en">
+<%@ taglib  uri="http://www.springframework.org/security/tags"  prefix="sec" %>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <sec:csrfMetaTags />
+    <title>Title</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="basic.js"></script>
 </head>
 <body>
-$END$
+<form class="signup-form" action="/api/members" method="GET">
+    <div class="row">
+        <div class="input-field col s12">
+            <input id="profile" name="profile" type="file" class="validate"/>
+            <label for="profile">profile</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="input-field col s12">
+            <input id="id" name="id" type="text" class="validate"/>
+            <label for="id">Userid</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="input-field col s12">
+            <input id="pw" name="pw" type="password" class="validate"/>
+            <label for="pw">Userpassword</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="input-field col s12">
+            <input id="name" name="name" type="text" class="validate"/>
+            <label for="name">Username</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="input-field col s12">
+            <input id="age" name="age" type="text" class="validate"/>
+            <label for="age">Userage</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="input-field col s12">
+            <input id="phone" name="phone" type="text" class="validate"/>
+            <label for="phone">Userphone</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="input-field col s12">
+            <input id="email" name="email" type="email" class="validate"/>
+            <label for="email">Email</label>
+        </div>
+    </div>
+    <input class="signup-btn waves-effect waves-light btn" type="submit" value="가입하기" onclick="regist()"/>
+</form>
 </body>
 </html>
