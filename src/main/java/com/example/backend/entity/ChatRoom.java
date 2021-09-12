@@ -34,7 +34,7 @@ public class ChatRoom {
     private int maxNum;
 
     @ManyToOne
-    @JoinColumn(name="userdIdx")
+    @JoinColumn(name="memberIdx")
     private Member member;
 
     @Column(nullable = true,columnDefinition = "varchar(200)")

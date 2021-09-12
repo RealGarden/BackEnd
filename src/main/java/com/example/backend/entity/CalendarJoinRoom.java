@@ -24,7 +24,7 @@ public class CalendarJoinRoom {
     @Column(nullable = false,columnDefinition = "char(5)")
     private String status;
 
-    @JoinColumn(name="userIdx")
+    @JoinColumn(name="memberIdx")
     @ManyToOne
     private Member member;
 

@@ -38,6 +38,6 @@ public class Qna {
     private String answer;
 
     @ManyToOne
-    @JoinColumn(name="userIdx")
+    @JoinColumn(name="memberIdx")
     private Member member;
 }

@@ -39,7 +39,7 @@ public class CalendarRoom {
     @Column(nullable = false,columnDefinition = "varchar(50)")
     private String contents;
 
-    @JoinColumn(name="userIdx")
+    @JoinColumn(name="memberIdx")
     @ManyToOne
     private Member member;
 

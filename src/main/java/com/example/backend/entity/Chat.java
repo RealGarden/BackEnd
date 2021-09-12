@@ -27,7 +27,7 @@ public class Chat{
 
     private Date stopDate;
 
-    @JoinColumn(name="userdIdx")
+    @JoinColumn(name="memberIdx")
     @ManyToOne
     private Member member;
 
