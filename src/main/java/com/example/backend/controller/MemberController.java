@@ -2,7 +2,7 @@ package com.example.backend.controller;
 
 import com.example.backend.domain.MemberRepository;
 import com.example.backend.domain.MemberRequestDto;
-import com.example.backend.domain.MemberRole;
+import com.example.backend.entity.MemberRole;
 import com.example.backend.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;

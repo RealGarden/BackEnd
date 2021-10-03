@@ -1,16 +1,15 @@
 package com.example.backend.entity;
 
 import com.example.backend.domain.CalendarRequestDto;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Data
+@Getter
+@Setter
 @ToString
 @NoArgsConstructor
 public class CalendarRoom {

@@ -1,18 +1,17 @@
 package com.example.backend.entity;
 
 import com.example.backend.domain.MemberRequestDto;
-import com.example.backend.domain.MemberRole;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @Entity
 @NoArgsConstructor //기본생성자
 @ToString
@@ -63,6 +62,7 @@ public class Member {
 
     @UpdateTimestamp
     private Date editDate;
+
     @Column(nullable = true)
     private String withrawDate;
 
@@ -72,6 +72,15 @@ public class Member {
     @OneToMany(cascade= CascadeType.ALL, fetch=FetchType.EAGER)
     @JoinColumn(name="id")
     private List<MemberRole> roles;
+
+    @OneToMany(cascade= CascadeType.ALL, fetch=FetchType.EAGER)
+    @JoinColumn(name = "room_id")
+    private Set<ChatJoinRoom> chatJoinRooms;
+
+    @OneToMany(cascade= CascadeType.ALL, fetch=FetchType.EAGER)
+    @JoinColumn(name="user_idx")
+    private Set<ChatRoom> chatRoom;
+
 
     public Member(String id, String pw, String name, int age, String phone, String Uemail, String profile){
         this.id=id;
@@ -98,7 +107,6 @@ public class Member {
         this.friendAlarm=true;
         this.talkAlarm=true;
     }
-
 
     public void update(MemberRequestDto requestDto) {
         this.profile=requestDto.getProfile();

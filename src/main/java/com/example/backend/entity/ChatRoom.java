@@ -1,15 +1,15 @@
 package com.example.backend.entity;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
-@Data
+@Getter
+@Setter
 @ToString
 @NoArgsConstructor
 public class ChatRoom {
@@ -40,6 +40,9 @@ public class ChatRoom {
     @Column(nullable = true,columnDefinition = "varchar(200)")
     private String chatSource;
 
+    @OneToMany
+    @JoinColumn(name="user_idx")
+    private Set<ChatJoinRoom> chatJoinRood;
 
 
 
