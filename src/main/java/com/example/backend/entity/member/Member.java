@@ -1,6 +1,8 @@
-package com.example.backend.entity;
+package com.example.backend.entity.member;
 
-import com.example.backend.domain.MemberRequestDto;
+import com.example.backend.domain.member.MemberRequestDto;
+import com.example.backend.entity.chat.ChatJoinRoom;
+import com.example.backend.entity.chat.ChatRoom;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -18,9 +20,6 @@ import java.util.Set;
 public class Member {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long memberIdx;
-
     @Column(nullable = false,columnDefinition = "varchar(13)")
     private String id;
 
