@@ -1,5 +1,6 @@
-package com.example.backend.entity;
+package com.example.backend.entity.chat;
 
+import com.example.backend.entity.member.Member;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;

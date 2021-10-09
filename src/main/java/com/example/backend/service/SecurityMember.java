@@ -1,7 +1,7 @@
 package com.example.backend.service;
 
-import com.example.backend.entity.MemberRole;
-import com.example.backend.entity.Member;
+import com.example.backend.entity.member.MemberRole;
+import com.example.backend.entity.member.Member;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;

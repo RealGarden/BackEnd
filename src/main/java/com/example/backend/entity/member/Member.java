@@ -20,6 +20,8 @@ import java.util.Set;
 public class Member {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long memberIdx;
     @Column(nullable = false,columnDefinition = "varchar(13)")
     private String id;
 

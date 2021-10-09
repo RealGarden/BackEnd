@@ -1,6 +1,7 @@
-package com.example.backend.entity;
+package com.example.backend.entity.calendar;
 
-import com.example.backend.domain.CalendarRequestDto;
+import com.example.backend.domain.calendar.CalendarRequestDto;
+import com.example.backend.entity.member.Member;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 

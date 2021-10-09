@@ -1,5 +1,6 @@
-package com.example.backend.entity;
+package com.example.backend.entity.friend;
 
+import com.example.backend.entity.member.Member;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,10 +15,10 @@ import java.util.List;
 public class FriendRequest {
     private static final String NULL_INPUT_MESSAGE="Null 값을 입력할 수 없습니다.";
     @Id
-    @GeneratedValue()
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long requestIdx;
 
-    @JoinColumn(name="senderId",nullable = false,updatable = false)
+    @JoinColumn(name="sender",nullable = false,updatable = false)
     @ManyToOne
     private Member senderId; //친구요청한사람 id
 
@@ -30,11 +31,11 @@ public class FriendRequest {
     private FriendRequest(Member senderId,Member receiverId){
        validateNotNull(senderId);
        validateNotNull(receiverId);
-       this.senderId=senderId;
-       this.receiverId=receiverId;
+       this.senderId.setId(senderId.getId());
+       this.receiverId.setId(receiverId.getId());
     }
     private void validateNotNull(Member userId){
-        if(userId==null)
+        if(userId.getId()==null)
             throw new IllegalArgumentException(NULL_INPUT_MESSAGE);
     }
 

@@ -1,8 +1,8 @@
-package com.example.backend.controller;
+package com.example.backend.controller.calendar;
 
-import com.example.backend.domain.CalendarRepository;
-import com.example.backend.domain.CalendarRequestDto;
-import com.example.backend.entity.CalendarRoom;
+import com.example.backend.domain.calendar.CalendarRepository;
+import com.example.backend.domain.calendar.CalendarRequestDto;
+import com.example.backend.entity.calendar.CalendarRoom;
 import com.example.backend.service.CalendarRoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

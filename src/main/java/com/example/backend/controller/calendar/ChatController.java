@@ -1,10 +1,5 @@
-package com.example.backend.controller;
+package com.example.backend.controller.calendar;
 
-import com.example.backend.entity.ChatRoom;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.stereotype.Controller;
-
-import java.io.IOException;
 /*
 @Controller
 public class ChatController {

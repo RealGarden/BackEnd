@@ -1,8 +1,8 @@
-package com.example.backend.controller;
+package com.example.backend.controller.friend;
 
-import com.example.backend.domain.FriendDto;
-import com.example.backend.domain.FriendRepository;
-import com.example.backend.entity.FriendRelationship;
+import com.example.backend.domain.friend.FriendDto;
+import com.example.backend.domain.friend.FriendRepository;
+import com.example.backend.entity.friend.FriendRelationship;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

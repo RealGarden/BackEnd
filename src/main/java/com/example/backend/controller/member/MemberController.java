@@ -1,9 +1,9 @@
-package com.example.backend.controller;
+package com.example.backend.controller.member;
 
-import com.example.backend.domain.MemberRepository;
-import com.example.backend.domain.MemberRequestDto;
-import com.example.backend.entity.MemberRole;
-import com.example.backend.entity.Member;
+import com.example.backend.domain.member.MemberRepository;
+import com.example.backend.domain.member.MemberRequestDto;
+import com.example.backend.entity.member.MemberRole;
+import com.example.backend.entity.member.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;

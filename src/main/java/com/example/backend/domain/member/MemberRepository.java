@@ -1,8 +1,7 @@
-package com.example.backend.domain;
+package com.example.backend.domain.member;
 
-import com.example.backend.entity.Member;
+import com.example.backend.entity.member.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository

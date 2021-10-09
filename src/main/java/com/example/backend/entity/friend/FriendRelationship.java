@@ -1,6 +1,6 @@
-package com.example.backend.entity;
+package com.example.backend.entity.friend;
 
-import com.example.backend.domain.FriendDto;
+import com.example.backend.entity.member.Member;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -39,8 +39,8 @@ public class FriendRelationship  {
     private FriendRelationship(Member userId,Member friendId){
         validateNotNull(userId);
         validateNotNull(friendId);
-        this.friendId=friendId;
-        this.userId=userId;
+        this.friendId.setId(friendId.getId());
+        this.userId.setId(userId.getId());
     }
 
     private void validateNotNull(Member userId){

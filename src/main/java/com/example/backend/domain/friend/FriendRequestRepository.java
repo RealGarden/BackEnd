@@ -1,16 +1,16 @@
-package com.example.backend.domain;
+package com.example.backend.domain.friend;
 
-import com.example.backend.entity.FriendRequest;
-import com.example.backend.entity.Member;
+import com.example.backend.entity.friend.FriendRequest;
+import com.example.backend.entity.member.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface FriendRequestRepository extends JpaRepository<FriendRequest,Long> {
-    List<FriendRequest>findAllByReceiverId(Member receiverId);
-    Optional<FriendRequest> fiendAllByReceiverId(Member receiverId);
+    List<FriendRequest>findAllByReceiverId(Long receiverId);
+    Optional<FriendRequest> fiendAllByReceiverId(Long receiverId);
 
-    void deleteBySenderIdOrReceiverId(Member senderId,Member receiverId);
+    void deleteBySenderIdOrReceiverId(Long senderId,Long receiverId);
 
 }

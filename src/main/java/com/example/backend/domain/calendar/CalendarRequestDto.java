@@ -1,4 +1,4 @@
-package com.example.backend.domain;
+package com.example.backend.domain.calendar;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

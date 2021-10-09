@@ -1,4 +1,4 @@
-package com.example.backend.domain;
+package com.example.backend.domain.friend;
 
 import lombok.Getter;
 
