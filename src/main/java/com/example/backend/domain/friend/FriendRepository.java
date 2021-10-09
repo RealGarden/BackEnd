@@ -9,11 +9,11 @@ import java.util.Optional;
 
 public interface FriendRepository extends JpaRepository<FriendRelationship, Long> {
 
-    List<FriendRelationship> findAllByUserId(Member userId);
+    List<FriendRelationship> findAllByUserId(Long userId);
 
-    Optional<FriendRelationship> findByUserIdAndFriendId(Member userId, Member friendId);
+    Optional<FriendRelationship> findByUserIdAndFriendId(Long userId, Long friendId);
 
-    void deleteByUserIdOrFriendId(Member friendId, Member userIds);
+    void deleteByFriendIdOrUserId(Long friendId, Long userIds);
 
 
 }

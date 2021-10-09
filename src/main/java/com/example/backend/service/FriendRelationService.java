@@ -1,5 +1,7 @@
 package com.example.backend.service;
 
+import com.example.backend.domain.friend.FriendRelationCreate;
+import com.example.backend.domain.friend.FriendRelationResponse;
 import com.example.backend.domain.friend.FriendRepository;
 import com.example.backend.entity.friend.FriendRelationship;
 import com.example.backend.entity.friend.FriendRequest;
@@ -18,44 +20,44 @@ public class FriendRelationService {
     public static final String MISMATCHED_USER_MESSAGE = "유저가 일치하지 않습니다.";
     public static final String ALREADY_FRIEND_MESSAGE = "이미 친구입니다.";
 
-    private final FriendRequsetService friendRequestService;
-    private final MemberService memberService;
-    private final FriendRepository friendRepository;
+    private  FriendRequestService friendRequestService;
+    private  MemberService memberService;
+    private  FriendRepository friendRepository;
 
-    public FriendService(final FriendRepository friendRepository, final FriendRequestService friendRuestService,
+    public FriendRelationService(final FriendRepository friendRepository, final FriendRequestService friendRequestService,
                          final MemberService memberService) {
         this.friendRepository = friendRepository;
-        this.friendRequestService = friendRuestService;
+        this.friendRequestService = friendRequestService;
         this.memberService = memberService;
     }
 
-    public List<FriendRelationship> save(final FriendCreate friendCreate) {
+    public List<FriendRelationship> save(final FriendRelationCreate friendCreate) {
         FriendRequest friendRequest = friendRequestService.findById(friendCreate.getFriendRequestId());
 
-        checkAlreadyFriend(friendRequest.getSenderId(), friendRequest.getReceiverId());
+        checkAlreadyFriend(friendRequest.getSenderId().getMemberIdx(), friendRequest.getReceiverId().getMemberIdx());
 
         friendRequestService.delete(friendRequest);
         return friendRepository.saveAll(friendRequest.createBidirectionalFriends());
     }
 
     @Transactional(readOnly = true)
-    public List<FriendResponse> findAllFriendResponseByRelatingUserId(final Long id) {
-        return friendRepository.findAllByRelatingUserId(id).stream()
-                .map(friend -> FriendResponse.from(friend, memberService.findById(friend.getRelatedUserId())))
+    public List<FriendRelationResponse> findAllFriendResponseByRelatingUserId(final Long id) {
+        return friendRepository.findAllByUserId(id).stream()
+                .map(friend -> FriendRelationResponse.from(friend, memberService.findById(friend.getFriendId().getMemberIdx())))
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public Friend findById(final Long id) {
+    public FriendRelationship findById(final Long id) {
         return friendRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_FRIEND_MESSAGE));
     }
 
     public void deleteById(final Long friendId, final Long userSessionId) {
-        Friend friend = friendRepository.findById(friendId)
+        FriendRelationship friend = friendRepository.findById(friendId)
                 .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_FRIEND_MESSAGE));
-        Friend reverseFriend = friendRepository
-                .findByRelatingUserIdAndRelatedUserId(friend.getRelatedUserId(), friend.getRelatingUserId())
+        FriendRelationship reverseFriend = friendRepository
+                .findByUserIdAndFriendId(friend.getUserId().getMemberIdx(), friend.getFriendId().getMemberIdx())
                 .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_FRIEND_MESSAGE));
 
         checkUserId(userSessionId, friend, reverseFriend);
@@ -64,8 +66,8 @@ public class FriendRelationService {
         friendRepository.delete(reverseFriend);
     }
 
-    private void checkUserId(final Long userSessionId, final Friend friend, final Friend reverseFriend) {
-        if (!(friend.matchRelatingUserId(userSessionId) && reverseFriend.matchRelatedUserId(userSessionId))) {
+    private void checkUserId(final Long userSessionId, final FriendRelationship friend, final FriendRelationship reverseFriend) {
+        if (!(friend.matchUserId(userSessionId) && reverseFriend.matchFriendId(userSessionId))) {
             throw new MismatchedUserException(MISMATCHED_USER_MESSAGE);
         }
     }
@@ -77,10 +79,10 @@ public class FriendRelationService {
     }
 
     public boolean isAlreadyFriend(Long relatingId, Long relatedId) {
-        return friendRepository.findByRelatingUserIdAndRelatedUserId(relatingId, relatedId).isPresent();
+        return friendRepository.findByUserIdAndFriendId(relatingId, relatedId).isPresent();
     }
 
     public void deleteByRelatedUserIdOrRelatingUserId(final Long userId) {
-        friendRepository.deleteByRelatedUserIdOrRelatingUserId(userId, userId);
+        friendRepository.deleteByFriendIdOrUserId(userId, userId);
     }
 }

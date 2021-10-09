@@ -16,15 +16,5 @@ public class FriendController {
     //friend request ,friend response
     private final FriendRepository friendRepository;
 
-    @PostMapping("/")
-    public void friendRequest(@RequestBody FriendDto dto){
-        FriendRelationship friendRelationship=new FriendRelationship(dto);
-        friendRelationship.setStatus("대기");
-        if(friendRelationship.getNickname().isEmpty()){
-            //friendRelationship.setNickname(friendRepository.findById();
-        }
-        else{
-            friendRelationship.setNickname(dto.getNickname());
-        }
-    }
+
 }

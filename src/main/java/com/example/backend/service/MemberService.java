@@ -15,7 +15,7 @@ public class MemberService {
     public static final String NOT_FOUND_MESSAGE = "유저를 찾을수 없습니다.";
     public static final String EMAIL_DUPLICATE_MESSAGE = "중복된 이메일입니다.";
 
-    private final MemberRepository memberRepository;
+    private MemberRepository memberRepository;
 
     public MemberService(final MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
@@ -36,7 +36,7 @@ public class MemberService {
 //        return MemberResponse.from(findById(id));
 //    }
 
-    public Member save(final UserRequest userRequest) {
+    public Member save(final UserRequest userRequest) { //멤버만드는거같은뎅
         try {
             checkEmailDuplicate(userRequest.getEmail());
             return memberRepository.save(userRequest.toEntity());

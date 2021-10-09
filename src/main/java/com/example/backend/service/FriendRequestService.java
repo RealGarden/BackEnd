@@ -3,11 +3,13 @@ package com.example.backend.service;
 import com.example.backend.domain.friend.FriendRequestCreate;
 import com.example.backend.domain.friend.FriendRequestRepository;
 import com.example.backend.domain.friend.FriendRequestResponse;
+import com.example.backend.entity.friend.FriendRequest;
 import com.example.backend.entity.member.Member;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -19,26 +21,24 @@ public class FriendRequestService {
     public static final String NOT_FOUND_FRIEND_ASK_MESSAGE = "친구 요청을 찾을 수 없습니다.";
     public static final String MISMATCHED_USER_MESSAGE = "유저가 일치하지 않습니다.";
 
-    private final FriendRequestRepository friendRequestRepository;
-    private final MemberService memberService;
+    private FriendRequestRepository friendRequestRepository;
+    private MemberService memberService;
 
     public FriendRequestService(final FriendRequestRepository friendRequestRepository, final MemberService memberService) {
         this.friendRequestRepository = friendRequestRepository;
         this.memberService = memberService;
     }
 
-    public FriendRequestService() {
-    }
 
-    public FriendRequestResponse save(final Long senderId, final FriendRequestCreate friendAskCreate) {
+    public FriendRequestResponse save(final Long senderId, final FriendRequestCreate friendRequestCreate) {
         Member sender = memberService.findById(senderId);
-        Member receiver = memberService.findById(friendAskCreate.getReceiverId());
+        Member receiver = memberService.findById(friendRequestCreate.getReceiver().getMemberIdx());
 
-        checkFriendAskExist(senderId, friendAskCreate.getReceiverId(), ALREADY_FRIEND_ASK_EXIST_MESSAGE);
-        checkFriendAskExist(friendAskCreate.getReceiverId(), senderId, ALREADY_OTHER_FRIEND_ASK_EXIST_MESSAGE);
+        checkFriendAskExist(senderId, friendRequestCreate.getReceiver().getMemberIdx(), ALREADY_FRIEND_ASK_EXIST_MESSAGE);
+        checkFriendAskExist(friendRequestCreate.getReceiver().getMemberIdx(), senderId, ALREADY_OTHER_FRIEND_ASK_EXIST_MESSAGE);
 
-        FriendAsk friendAsk = friendRequestRepository.save(friendAskCreate.toEntity(senderId));
-        return FriendAskResponse.from(friendAsk, sender, receiver);
+        FriendRequest friendRequest = friendRequestRepository.save(friendRequestCreate.toEntity(sender));
+        return FriendRequestResponse.from(friendRequest, sender, receiver);
     }
 
     private void checkFriendAskExist(final Long senderId, final Long receiverId, final String message) {
@@ -48,32 +48,32 @@ public class FriendRequestService {
     }
 
     @Transactional(readOnly = true)
-    public List<FriendAskResponse> findAllByReceiverId(final Long id) {
+    public List<FriendRequestResponse> findAllByReceiverId(final Long id) {
         return friendRequestRepository.findAllByReceiverId(id).stream()
-                .map(friendAsk -> FriendAskResponse.from(friendAsk,
-                        memberService.findById(friendAsk.getSenderId()),
-                        memberService.findById(friendAsk.getReceiverId())))
+                .map(friendRequest -> FriendRequestResponse.from(friendRequest,
+                        memberService.findById(friendRequest.getSenderId().getMemberIdx()),
+                        memberService.findById(friendRequest.getReceiverId().getMemberIdx())
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public FriendAsk findById(final Long friendAskId) {
-        return friendRequestRepository.findById(friendAskId)
+    public FriendRequest findById(final Long friendRequestId) {
+        return friendRequestRepository.findById(friendRequestId)
                 .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_FRIEND_ASK_MESSAGE));
     }
 
-    public void delete(final FriendAsk friendAsk) {
-        friendRequestRepository.delete(friendAsk);
+    public void delete(final FriendRequest friendRequest) {
+        friendRequestRepository.delete(friendRequest);
     }
 
-    public void deleteById(final Long friendAskId, final Long userSessionId) {
-        FriendAsk friendAsk = findById(friendAskId);
-        checkUserId(friendAsk, userSessionId);
-        friendRequestRepository.delete(friendAsk);
+    public void deleteById(final Long friendRequestId, final Long userSessionId) {
+        FriendRequest friendRequest = findById(friendRequestId);
+        checkUserId(friendRequest, userSessionId);
+        friendRequestRepository.delete(friendRequest);
     }
 
-    private void checkUserId(final FriendAsk friendAsk, final Long userSessionId) {
-        if (!friendAsk.matchUserId(userSessionId)) {
+    private void checkUserId(final FriendRequest friendRequest, final Long userSessionId) {
+        if (!friendRequest.matchUserId(userSessionId)) {
             throw new MismatchedUserException(MISMATCHED_USER_MESSAGE);
         }
     }
