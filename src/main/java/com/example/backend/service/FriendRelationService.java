@@ -5,6 +5,10 @@ import com.example.backend.domain.friend.FriendRelationResponse;
 import com.example.backend.domain.friend.FriendRepository;
 import com.example.backend.entity.friend.FriendRelationship;
 import com.example.backend.entity.friend.FriendRequest;
+import com.example.backend.entity.member.Member;
+import com.example.backend.exception.friend.AlreadyFriendException;
+import com.example.backend.exception.friend.MismatchedMemberException;
+import com.example.backend.service.member.MemberService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +25,7 @@ public class FriendRelationService {
     public static final String ALREADY_FRIEND_MESSAGE = "이미 친구입니다.";
 
     private  FriendRequestService friendRequestService;
-    private  MemberService memberService;
+    private MemberService memberService;
     private  FriendRepository friendRepository;
 
     public FriendRelationService(final FriendRepository friendRepository, final FriendRequestService friendRequestService,
@@ -53,22 +57,22 @@ public class FriendRelationService {
                 .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_FRIEND_MESSAGE));
     }
 
-    public void deleteById(final Long friendId, final Long userSessionId) {
+    public void deleteById(final Long friendId, final Member member) {
         FriendRelationship friend = friendRepository.findById(friendId)
                 .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_FRIEND_MESSAGE));
         FriendRelationship reverseFriend = friendRepository
                 .findByUserIdAndFriendId(friend.getUserId().getMemberIdx(), friend.getFriendId().getMemberIdx())
                 .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_FRIEND_MESSAGE));
 
-        checkUserId(userSessionId, friend, reverseFriend);
+        checkUserId(member, friend, reverseFriend);
 
         friendRepository.delete(friend);
         friendRepository.delete(reverseFriend);
     }
 
-    private void checkUserId(final Long userSessionId, final FriendRelationship friend, final FriendRelationship reverseFriend) {
-        if (!(friend.matchUserId(userSessionId) && reverseFriend.matchFriendId(userSessionId))) {
-            throw new MismatchedUserException(MISMATCHED_USER_MESSAGE);
+    private void checkUserId(final Member member, final FriendRelationship friend, final FriendRelationship reverseFriend) {
+        if (!(friend.matchUserId(member) && reverseFriend.matchFriendId(member))) {
+            throw new MismatchedMemberException(MISMATCHED_USER_MESSAGE);
         }
     }
 

@@ -49,11 +49,11 @@ public class FriendRelationship  {
     }
 
     public boolean matchUserId(Member userId){
-        return this.userId.equals(userId);
+        return this.userId.equals(userId.getId());
     }
 
     public  boolean matchFriendId(Member userId){
-        return  this.friendId.equals(userId);
+        return  this.friendId.equals(userId.getId());
     }
 
 //    public FriendRelationship(FriendDto dto){

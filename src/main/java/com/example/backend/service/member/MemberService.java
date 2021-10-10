@@ -1,11 +1,16 @@
-package com.example.backend.service;
+package com.example.backend.service.member;
 
 import com.example.backend.domain.member.MemberRepository;
+import com.example.backend.domain.member.MemberRequestDto;
+import com.example.backend.domain.member.MemberResponseDto;
 import com.example.backend.entity.member.Member;
+import com.example.backend.exception.member.SignUpException;
+import com.example.backend.exception.member.MemberMismatchException;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,25 +26,25 @@ public class MemberService {
         this.memberRepository = memberRepository;
     }
 
-    @Transactional(readOnly = true)
-    public Member findById(final Long idx) {
-        return memberRepository.findById(idx).orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MESSAGE));
+    @Transactional
+    public Member findById(final String id) {
+        return memberRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MESSAGE));
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public Member findByEmail(final String email) {
         return memberRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MESSAGE));
     }
 
-//    @Transactional(readOnly = true)
-//    public MemberResponse findUserResponseById(final Long id) {
-//        return MemberResponse.from(findById(id));
-//    }
+    @Transactional //수정필요
+    public MemberResponseDto findUserResponseById(final String id) {
+        return MemberResponseDto.from(findById(id));
+    }
 
-    public Member save(final UserRequest userRequest) { //멤버만드는거같은뎅
+    public Member save(final MemberRequestDto memberRequestDto) { //멤버만드는거같은뎅
         try {
-            checkEmailDuplicate(userRequest.getEmail());
-            return memberRepository.save(userRequest.toEntity());
+            checkEmailDuplicate(memberRequestDto.getEmail());
+            return memberRepository.save(memberRequestDto.toEntity());
         } catch (Exception e) {
             throw new SignUpException(e.getMessage());
         }
@@ -51,36 +56,32 @@ public class MemberService {
         }
     }
 
-    public void delete(final Long userId, final Long sessionUserId) { //유저 삭제
-        matchId(userId, sessionUserId);
-        try {
-            memberRepository.deleteById(userId);
-        } catch (Exception e) {
-            throw new MemberDeleteException();
-        }
-    }
+//    public void delete(final Long userId, final Long sessionUserId) { //유저 삭제
+//        matchId(userId, sessionUserId);
+//        try {
+//            memberRepository.deleteById(userId);
+//        } catch (Exception e) {
+//            throw new MemberDeleteException();
+//        }
+//    }
 
     private void matchId(final Long userId, final Long sessionUserId) {
         if (userId == null || !userId.equals(sessionUserId)) {
-            throw new UserMismatchException();
+            throw new MemberMismatchException();
         }
     }
 
-    public Page<UserResponse> findByName(final String name, final Pageable pageable) {
-        return memberRepository.findAllByNameIsContaining(name, pageable)
-                .map(UserResponse::from);
-    }
 
-    public List<UserResponse> findAllUsersWithoutCurrentUser(final Long id) {
+    public List<MemberResponseDto> findAllUsersWithoutCurrentUser(final Long id) {
         return memberRepository.findAll().stream()
                 .filter(user -> !user.matchId(id))
-                .map(UserResponse::from)
+                .map(MemberResponseDto::from)
                 .collect(Collectors.toList());
     }
 
-    public List<UserResponse> findUserResponseOfFriendsById(final Long id) {
+    public List<MemberResponseDto> findUserResponseOfFriendsById(final String id) {
         return memberRepository.findFriendsByUserId(id).stream()
-                .map(UserResponse::from)
+                .map(MemberResponseDto::from)
                 .collect(Collectors.toList());
     }
 

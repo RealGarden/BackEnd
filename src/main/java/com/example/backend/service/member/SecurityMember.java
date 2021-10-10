@@ -1,4 +1,4 @@
-package com.example.backend.service;
+package com.example.backend.service.member;
 
 import com.example.backend.entity.member.MemberRole;
 import com.example.backend.entity.member.Member;
@@ -18,7 +18,7 @@ public class SecurityMember extends User {
     private static final long serialVersionUID = 1L;
 
     public SecurityMember(Member member) {
-        super(member.getId(), member.getPw(), makeGrantedAuthority(member.getRoles()));
+        super(member.getId(), member.getPassword(), makeGrantedAuthority(member.getRoles()));
     }
 
     private static List<GrantedAuthority> makeGrantedAuthority(List<MemberRole> roles){

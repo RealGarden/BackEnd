@@ -2,6 +2,7 @@ package com.example.backend.service;
 
 import com.example.backend.domain.member.MemberRepository;
 import com.example.backend.entity.member.Member;
+import com.example.backend.service.member.SecurityMember;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
