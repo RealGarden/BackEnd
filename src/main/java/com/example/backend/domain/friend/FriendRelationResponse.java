@@ -12,22 +12,22 @@ import java.util.Optional;
 @NoArgsConstructor
 public class FriendRelationResponse {
 
+    private Long Idx;
     private Long friendIdx;
-    private String friendId;
     private String friendName;
 
 
     @Builder
-    private FriendRelationResponse(Long friendIdx, String friendId, String friendName) {
+    private FriendRelationResponse(Long Idx, Long friendIdx, String friendName) {
+        this.Idx = Idx;
         this.friendIdx = friendIdx;
-        this.friendId = friendId;
         this.friendName = friendName;
     }
 
     public static FriendRelationResponse from(FriendRelationship friend, Member relatedUser) {
         FriendRelationResponse friendResponse = FriendRelationResponse.builder()
                 .friendIdx(friend.getFriendRelationshipIdx())
-                .friendId(relatedUser.getId())
+                .friendIdx(relatedUser.getMemberIdx())
                 .friendName(relatedUser.getName())
                 .build();
 

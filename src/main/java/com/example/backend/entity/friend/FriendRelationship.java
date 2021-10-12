@@ -48,12 +48,12 @@ public class FriendRelationship  {
             throw new IllegalArgumentException(NULL_INPUT_MESSAGE);
     }
 
-    public boolean matchUserId(Member userId){
-        return this.userId.equals(userId.getId());
+    public boolean matchUserId(Long userId){
+        return this.userId.equals(userId);
     }
 
-    public  boolean matchFriendId(Member userId){
-        return  this.friendId.equals(userId.getId());
+    public  boolean matchFriendId(Long userId){
+        return  this.friendId.equals(userId);
     }
 
 //    public FriendRelationship(FriendDto dto){

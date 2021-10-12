@@ -11,27 +11,27 @@ import lombok.NoArgsConstructor;
 public class FriendRequestResponse {
 
     private Long requestIdx;
-    private String senderId;
+    private Long senderIdx;
     private String senderName;
-    private String receiverId;
+    private Long receiverIdx;
     private String receiverName;
 
     @Builder
-    private FriendRequestResponse(Long requestIdx, String senderId, String senderName,
-                              String receiverId, String receiverName) {
+    private FriendRequestResponse(Long requestIdx, Long senderIdx, String senderName,
+                              Long receiverIdx, String receiverName) {
         this.requestIdx = requestIdx;
-        this.senderId = senderId;
+        this.senderIdx = senderIdx;
         this.senderName = senderName;
-        this.receiverId = receiverId;
+        this.receiverIdx = receiverIdx;
         this.receiverName = receiverName;
     }
 
     public static FriendRequestResponse from(FriendRequest friendRequest, Member sender, Member receiver) {
         return FriendRequestResponse.builder()
                 .requestIdx(friendRequest.getRequestIdx())
-                .senderId(sender.getId())
+                .senderIdx(sender.getMemberIdx())
                 .senderName(sender.getName())
-                .receiverId(receiver.getId())
+                .receiverIdx(receiver.getMemberIdx())
                 .receiverName(receiver.getName())
                 .build();
     }

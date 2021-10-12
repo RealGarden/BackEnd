@@ -36,7 +36,7 @@ public class FriendRelationService {
     }
 
     public List<FriendRelationship> save(final FriendRelationCreate friendCreate) {
-        FriendRequest friendRequest = friendRequestService.findById(friendCreate.getFriendRequestId());
+        FriendRequest friendRequest = friendRequestService.findById(friendCreate.getFriendRelationId());
 
         checkAlreadyFriend(friendRequest.getSenderId().getMemberIdx(), friendRequest.getReceiverId().getMemberIdx());
 
@@ -57,21 +57,21 @@ public class FriendRelationService {
                 .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_FRIEND_MESSAGE));
     }
 
-    public void deleteById(final Long friendId, final Member member) {
+    public void deleteById(final Long friendId, final Long memberSessionId) {
         FriendRelationship friend = friendRepository.findById(friendId)
                 .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_FRIEND_MESSAGE));
         FriendRelationship reverseFriend = friendRepository
                 .findByUserIdAndFriendId(friend.getUserId().getMemberIdx(), friend.getFriendId().getMemberIdx())
                 .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_FRIEND_MESSAGE));
 
-        checkUserId(member, friend, reverseFriend);
+        checkUserId(memberSessionId, friend, reverseFriend);
 
         friendRepository.delete(friend);
         friendRepository.delete(reverseFriend);
     }
 
-    private void checkUserId(final Member member, final FriendRelationship friend, final FriendRelationship reverseFriend) {
-        if (!(friend.matchUserId(member) && reverseFriend.matchFriendId(member))) {
+    private void checkUserId(final Long memberSessionId, final FriendRelationship friend, final FriendRelationship reverseFriend) {
+        if (!(friend.matchUserId(memberSessionId) && reverseFriend.matchFriendId(memberSessionId))) {
             throw new MismatchedMemberException(MISMATCHED_USER_MESSAGE);
         }
     }

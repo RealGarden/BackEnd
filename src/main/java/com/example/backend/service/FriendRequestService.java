@@ -6,6 +6,7 @@ import com.example.backend.domain.friend.FriendRequestResponse;
 import com.example.backend.entity.friend.FriendRequest;
 import com.example.backend.entity.member.Member;
 import com.example.backend.exception.friend.FriendAskFailException;
+import com.example.backend.exception.friend.MismatchedMemberException;
 import com.example.backend.service.member.MemberService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,9 +33,9 @@ public class FriendRequestService {
     }
 
 
-    public FriendRequestResponse save(final String senderId, final FriendRequestCreate friendRequestCreate) {
+    public FriendRequestResponse save(final Long senderId, final FriendRequestCreate friendRequestCreate) {
         Member sender = memberService.findById(senderId);
-        Member receiver = memberService.findById(friendRequestCreate.getReceiver().getId());
+        Member receiver = memberService.findById(friendRequestCreate.getReceiver().getMemberIdx());
 
         checkFriendAskExist(senderId, friendRequestCreate.getReceiver().getMemberIdx(), ALREADY_FRIEND_ASK_EXIST_MESSAGE);
         checkFriendAskExist(friendRequestCreate.getReceiver().getMemberIdx(), senderId, ALREADY_OTHER_FRIEND_ASK_EXIST_MESSAGE);
@@ -52,9 +53,9 @@ public class FriendRequestService {
     @Transactional(readOnly = true)
     public List<FriendRequestResponse> findAllByReceiverId(final Long id) {
         return friendRequestRepository.findAllByReceiverId(id).stream()
-                .map(friendRequest -> FriendRequestResponse.from(friendRequest,
-                        memberService.findById(friendRequest.getSenderId().getMemberIdx()),
-                        memberService.findById(friendRequest.getReceiverId().getMemberIdx())
+                .map(friendAsk -> FriendRequestResponse.from(friendAsk,
+                        memberService.findById(friendAsk.getSenderId().getMemberIdx()),
+                        memberService.findById(friendAsk.getReceiverId().getMemberIdx())))
                 .collect(Collectors.toList());
     }
 
@@ -76,7 +77,7 @@ public class FriendRequestService {
 
     private void checkUserId(final FriendRequest friendRequest, final Long userSessionId) {
         if (!friendRequest.matchUserId(userSessionId)) {
-            throw new MismatchedUserException(MISMATCHED_USER_MESSAGE);
+            throw new MismatchedMemberException(MISMATCHED_USER_MESSAGE);
         }
     }
 

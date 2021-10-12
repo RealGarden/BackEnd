@@ -2,6 +2,7 @@ package com.example.backend.domain.member;
 
 import com.example.backend.entity.member.Member;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
@@ -35,7 +36,7 @@ public class MemberResponseDto {
                 .build();
 
         Optional<String> maybeProfile = getFileFeatureOfProfile(member.getProfile());
-        maybeProfile.ifPresent(profile -> memberResponsedto.profile = profile.getBytes());
+        maybeProfile.ifPresent(profile -> memberResponsedto.profile = profile);
 
         return memberResponsedto;
     }

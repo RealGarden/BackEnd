@@ -13,8 +13,8 @@ public class FriendRequestCreate {
     private Member receiver;
 
     @Builder
-    public FriendRequestCreate(String receiverId) {
-        receiver.setId(receiverId);
+    public FriendRequestCreate(Long receiverId) {
+        receiver.setMemberIdx(receiverId);
     }
 
     public FriendRequest toEntity(Member sender) {

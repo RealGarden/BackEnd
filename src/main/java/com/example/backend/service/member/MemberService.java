@@ -27,7 +27,7 @@ public class MemberService {
     }
 
     @Transactional
-    public Member findById(final String id) {
+    public Member findById(final Long id) {
         return memberRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MESSAGE));
     }
 
@@ -37,7 +37,7 @@ public class MemberService {
     }
 
     @Transactional //수정필요
-    public MemberResponseDto findUserResponseById(final String id) {
+    public MemberResponseDto findUserResponseById(final Long id) {
         return MemberResponseDto.from(findById(id));
     }
 
