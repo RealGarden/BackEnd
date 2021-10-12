@@ -1,11 +1,10 @@
-package com.example.backend.service;
+package com.example.backend.service.friend;
 
 import com.example.backend.domain.friend.FriendRelationCreate;
 import com.example.backend.domain.friend.FriendRelationResponse;
 import com.example.backend.domain.friend.FriendRepository;
 import com.example.backend.entity.friend.FriendRelationship;
 import com.example.backend.entity.friend.FriendRequest;
-import com.example.backend.entity.member.Member;
 import com.example.backend.exception.friend.AlreadyFriendException;
 import com.example.backend.exception.friend.MismatchedMemberException;
 import com.example.backend.service.member.MemberService;
@@ -24,7 +23,7 @@ public class FriendRelationService {
     public static final String MISMATCHED_USER_MESSAGE = "유저가 일치하지 않습니다.";
     public static final String ALREADY_FRIEND_MESSAGE = "이미 친구입니다.";
 
-    private  FriendRequestService friendRequestService;
+    private FriendRequestService friendRequestService;
     private MemberService memberService;
     private  FriendRepository friendRepository;
 

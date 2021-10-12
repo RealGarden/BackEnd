@@ -1,4 +1,4 @@
-package com.example.backend.service;
+package com.example.backend.service.friend;
 
 import com.example.backend.domain.friend.FriendRequestCreate;
 import com.example.backend.domain.friend.FriendRequestRepository;

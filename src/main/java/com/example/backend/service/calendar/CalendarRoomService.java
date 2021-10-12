@@ -1,4 +1,4 @@
-package com.example.backend.service;
+package com.example.backend.service.calendar;
 
 import com.example.backend.domain.calendar.CalendarRepository;
 import com.example.backend.domain.calendar.CalendarRequestDto;
