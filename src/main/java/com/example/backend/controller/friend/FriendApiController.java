@@ -25,21 +25,21 @@ public class FriendApiController {
         this.friendRelationService = friendRelationService;
     }
 
-    @GetMapping("/asks")
-    public ResponseEntity<List<FriendRequestResponse>> listAsk(@LoginMember MemberSession memberSession) {
+    @GetMapping("/requests")
+    public ResponseEntity<List<FriendRequestResponse>> listRequest(@LoginMember MemberSession memberSession) {
         return ResponseEntity.ok(friendRequestService.findAllByReceiverId(memberSession.getId()));
     }
 
-    @PostMapping("/asks")
-    public ResponseEntity<FriendRequestResponse> createAsk(@RequestBody FriendRequestCreate friendRequestCreate,
+    @PostMapping("/requests")
+    public ResponseEntity<FriendRequestResponse> createRequest(@RequestBody FriendRequestCreate friendRequestCreate,
                                                            @LoginMember MemberSession memberSession) {
         friendRelationService.checkAlreadyFriend(friendRequestCreate.getReceiver().getMemberIdx(), memberSession.getId());
         return ResponseEntity.created(null)
                 .body(friendRequestService.save(memberSession.getId(), friendRequestCreate));
     }
 
-    @DeleteMapping("/asks/{id}")
-    public ResponseEntity deleteAsk(@PathVariable Long id, @LoginMember MemberSession memberSession) {
+    @DeleteMapping("/requests/{id}")
+    public ResponseEntity deleteRequest(@PathVariable Long id, @LoginMember MemberSession memberSession) {
         friendRequestService.deleteById(id, memberSession.getId());
         return ResponseEntity.noContent().build();
     }
