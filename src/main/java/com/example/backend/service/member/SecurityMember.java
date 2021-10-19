@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.User;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Getter
 @Setter
@@ -20,6 +21,7 @@ public class SecurityMember extends User {
     public SecurityMember(Member member) {
         super(member.getId(), member.getPassword(), makeGrantedAuthority(member.getRoles()));
     }
+
 
     private static List<GrantedAuthority> makeGrantedAuthority(List<MemberRole> roles){
         List<GrantedAuthority> list = new ArrayList<>();
