@@ -41,17 +41,17 @@ public class MemberController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<MemberResponseDto> show(@PathVariable String id) {
+    public ResponseEntity<MemberResponseDto> show(@PathVariable Long id) {
         return ResponseEntity.ok(memberService.findUserResponseById(id));
 
     }
 
-    @PostMapping
+   /* @PostMapping
     public ResponseEntity<MemberResponseDto> create(@RequestBody MemberRequestDto memberRequestDto) {
         MemberResponseDto memberResponseDto = memberCreateService.create(memberRequestDto);
         URI uri = linkTo(UserApiController.class).slash(memberResponseDto.getId()).toUri();
         return ResponseEntity.created(uri).body(memberResponseDto);
-    }
+    }*/
 
 
 

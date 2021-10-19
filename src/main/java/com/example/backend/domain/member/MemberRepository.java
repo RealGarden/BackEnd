@@ -18,5 +18,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Query("select u from Member u where u.id in (select f.friendId from FriendRelationship f where f.userId = :userId)")
     List<Member> findFriendsByUserId(@Param("userId") String userId);
 
-    Optional<Member> findById(String id);
+    //Optional<Member> findById(String id);
+
+    Member findById(String Id);
 }

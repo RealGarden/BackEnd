@@ -12,16 +12,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberCreateService {
 
     private final MemberService memberService;
-    private final IntroductionService introductionService;
 
-    public MemberCreateService(final MemberService memberService, final IntroductionService introductionService) {
+    public MemberCreateService(final MemberService memberService) {
         this.memberService = memberService;
-        this.introductionService = introductionService;
     }
 
     public MemberResponseDto create(MemberRequestDto memberRequestDto) {
         Member member= memberService.save(memberRequestDto);
-        introductionService.save(member.getId());
         return MemberResponseDto.from(member);
     }
 }
