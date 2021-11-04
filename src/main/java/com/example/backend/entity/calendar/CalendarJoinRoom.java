@@ -24,11 +24,11 @@ public class CalendarJoinRoom {
     @Column(nullable = false,columnDefinition = "char(5)")
     private String status;
 
-    @JoinColumn(name="memberIdx")
+    @JoinColumn(name="memberIdx",referencedColumnName = "memberIdx")
     @ManyToOne
     private Member member;
 
-    @JoinColumn(name="calendarRoomIdx")
+    @JoinColumn(name="calendarRoomIdx",referencedColumnName = "calendarRoomIdx")
     @ManyToOne
     private CalendarRoom calendarRoom;
 }

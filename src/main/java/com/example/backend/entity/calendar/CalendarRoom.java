@@ -39,10 +39,19 @@ public class CalendarRoom {
     @Column(nullable = false,columnDefinition = "varchar(50)")
     private String contents;
 
-    @JoinColumn(name="memberIdx")
+    @JoinColumn(name="memberIdx",referencedColumnName = "memberIdx")
     @ManyToOne
     private Member member;
 
+    @Builder
+    public CalendarRoom(Date start,Date end,String tag,int color,String title,String contents){
+        this.start=start;
+        this.end=end;
+        this.color=color;
+        this.tag=tag;
+        this.title=title;
+        this.contents=contents;
+    }
     public CalendarRoom(CalendarRequestDto requestDto){
         this.start=requestDto.getStart();
         this.end=requestDto.getEnd();
