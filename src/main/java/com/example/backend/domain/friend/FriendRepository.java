@@ -1,7 +1,6 @@
 package com.example.backend.domain.friend;
 
 import com.example.backend.entity.friend.FriendRelationship;
-import com.example.backend.entity.member.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

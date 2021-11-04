@@ -4,6 +4,7 @@ import com.example.backend.domain.member.MemberRepository;
 import com.example.backend.domain.member.MemberRequestDto;
 import com.example.backend.domain.member.MemberResponseDto;
 import com.example.backend.entity.member.Member;
+import com.example.backend.exception.member.MemberDeleteException;
 import com.example.backend.exception.member.SignUpException;
 import com.example.backend.exception.member.MemberMismatchException;
 import org.springframework.stereotype.Service;
@@ -56,14 +57,14 @@ public class MemberService {
         }
     }
 
-//    public void delete(final Long userId, final Long sessionUserId) { //유저 삭제
-//        matchId(userId, sessionUserId);
-//        try {
-//            memberRepository.deleteById(userId);
-//        } catch (Exception e) {
-//            throw new MemberDeleteException();
-//        }
-//    }
+    public void delete(final Long userId, final Long sessionUserId) { //유저 삭제
+        matchId(userId, sessionUserId);
+        try {
+            memberRepository.deleteById(userId);
+        } catch (Exception e) {
+            throw new MemberDeleteException();
+        }
+    }
 
     private void matchId(final Long userId, final Long sessionUserId) {
         if (userId == null || !userId.equals(sessionUserId)) {

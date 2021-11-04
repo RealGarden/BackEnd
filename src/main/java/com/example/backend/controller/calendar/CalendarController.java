@@ -2,38 +2,49 @@ package com.example.backend.controller.calendar;
 
 import com.example.backend.domain.calendar.CalendarRepository;
 import com.example.backend.domain.calendar.CalendarRequestDto;
+import com.example.backend.domain.calendar.CalendarResponseDto;
 import com.example.backend.entity.calendar.CalendarRoom;
+import com.example.backend.service.calendar.CalendarRoomCreateService;
 import com.example.backend.service.calendar.CalendarRoomService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
+@RequestMapping("/api/calendars")
 public class CalendarController {
     private final CalendarRepository calendarRepository;
     private final CalendarRoomService calendarRoomService;
+    private final CalendarRoomCreateService calendarRoomCreateService;
 
-    @PostMapping({"/","/api/calendar"})
-    public CalendarRoom createCalendarRoom(@RequestBody CalendarRequestDto requestDto){
-        CalendarRoom calendarRoom=new CalendarRoom(requestDto);
-        calendarRepository.save(calendarRoom);
-        return calendarRoom;
+    @PostMapping("/api/calendar")
+    public ResponseEntity<CalendarResponseDto> createCalendar(@RequestBody CalendarRequestDto calendarRequestDto){
+        CalendarResponseDto calendarResponseDto=calendarRoomCreateService.save(calendarRequestDto);
+        return ResponseEntity.ok().body(calendarResponseDto);
     }
 
-    @GetMapping("/api/calendar/{id}")
-    public CalendarRoom getCalendarRoom(@PathVariable Long calendarRoomIdx){
-        return calendarRepository.findById(calendarRoomIdx).get();
+    @GetMapping("/{memberId}")
+    public List<CalendarRoom> showAllCalendarRoom(@PathVariable String memberId){
+            return calendarRoomService.showAll(memberId);
     }
 
+    @GetMapping("/{memberId}/{calendarRoomIdx}")
+    public ResponseEntity<CalendarRoom> showCalendarRoom(@PathVariable String memberId,@PathVariable Long calendarRoomIdx){
+        CalendarRoom calendarRoom=calendarRoomService.show(memberId,calendarRoomIdx);
+        return ResponseEntity.ok().body(calendarRoom);
+    }
     @PutMapping("/api/calendar/{id}")
-    public Long updateCalendarRoom(@PathVariable Long calendarRoomIdx, @RequestBody CalendarRequestDto requestDto){
-        calendarRoomService.update(calendarRoomIdx,requestDto);
-        return calendarRoomIdx;
+    public Long updateCalendarRoom(@PathVariable Long id, @RequestBody CalendarRequestDto requestDto){
+        calendarRoomService.update(id,requestDto);
+        return id;
     }
 
     @DeleteMapping("/api/calendar/{id}")
-    public Long deleteCalendarRoom(@PathVariable Long calendarRoomIdx){
-        calendarRepository.deleteById(calendarRoomIdx);
-        return calendarRoomIdx;
+    public Long deleteCalendarRoom(@PathVariable Long id){
+        return calendarRoomService.delete(id);
     }
+
 }
