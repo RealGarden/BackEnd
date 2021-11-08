@@ -9,6 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -84,6 +85,11 @@ public class Member {
     @JoinColumn(name="user_idx")
     private Set<ChatRoom> chatRoom;
 
+    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private LocalDateTime loginAt;
+
+    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private LocalDateTime logoutAt;
     @Builder
     public Member(String id, String password, String name, int age, String phone, String email, String profile){
         MemberValidator.validateEmail(email);
@@ -138,6 +144,17 @@ public class Member {
         this.profile = profile;
     }
 
+    public void updateLoginAt(LocalDateTime loginAt) {
+        this.loginAt = loginAt;
+    }
+
+    public void updateLogoutAt(LocalDateTime logoutAt) {
+        this.logoutAt = logoutAt;
+    }
+
+    public boolean isLogin() {
+        return loginAt.isAfter(logoutAt);
+    }
 
 
 }

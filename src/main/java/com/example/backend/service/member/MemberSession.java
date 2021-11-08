@@ -13,7 +13,7 @@ import javax.servlet.http.HttpSessionBindingListener;
 @NoArgsConstructor
 public class MemberSession implements HttpSessionBindingListener {
 
-    public static final String USER_SESSION_KEY = "loginUser";
+    public static final String MEMBER_SESSION_KEY = "loginUser";
 
     private Long id;
     private String email;
