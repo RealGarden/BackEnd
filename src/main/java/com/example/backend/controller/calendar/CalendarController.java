@@ -12,15 +12,15 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/calendars")
+@RequiredArgsConstructor
 public class CalendarController {
     private final CalendarRepository calendarRepository;
     private final CalendarRoomService calendarRoomService;
     private final CalendarRoomCreateService calendarRoomCreateService;
 
-    @PostMapping("/api/calendar")
+    @PostMapping
     public ResponseEntity<CalendarResponseDto> createCalendar(@RequestBody CalendarRequestDto calendarRequestDto){
         CalendarResponseDto calendarResponseDto=calendarRoomCreateService.save(calendarRequestDto);
         return ResponseEntity.ok().body(calendarResponseDto);
@@ -31,18 +31,13 @@ public class CalendarController {
             return calendarRoomService.showAll(memberId);
     }
 
-    @GetMapping("/{memberId}/{calendarRoomIdx}")
-    public ResponseEntity<CalendarRoom> showCalendarRoom(@PathVariable String memberId,@PathVariable Long calendarRoomIdx){
-        CalendarRoom calendarRoom=calendarRoomService.show(memberId,calendarRoomIdx);
-        return ResponseEntity.ok().body(calendarRoom);
-    }
-    @PutMapping("/api/calendar/{id}")
+    @PutMapping("/{id}")
     public Long updateCalendarRoom(@PathVariable Long id, @RequestBody CalendarRequestDto requestDto){
         calendarRoomService.update(id,requestDto);
         return id;
     }
 
-    @DeleteMapping("/api/calendar/{id}")
+    @DeleteMapping("/{id}")
     public Long deleteCalendarRoom(@PathVariable Long id){
         return calendarRoomService.delete(id);
     }
