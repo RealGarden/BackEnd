@@ -11,4 +11,14 @@ public class ChatMessage {
     private String content;
 
 
+    public Object getMessageType() {
+
+    }
+
+    public Object getSender() {
+
+    }
+
+    public void setMessage(String s) {
+    }
 }

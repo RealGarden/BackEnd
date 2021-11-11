@@ -44,8 +44,11 @@ public class ChatRoom {
 
     @OneToMany
     @JoinColumn(name="user_idx")
-    private Set<ChatJoinRoom> chatJoinRood;
+    private Set<ChatJoinRoom> chatJoinRoom;
 
 
+    public static ChatRoom of(String id, String name) {
 
+
+    }
 }
