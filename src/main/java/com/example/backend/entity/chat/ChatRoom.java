@@ -49,6 +49,5 @@ public class ChatRoom {
 
     public static ChatRoom of(String id, String name) {
 
-
     }
 }

@@ -27,18 +27,17 @@ public class MemberApiController {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
-    @PostMapping("/form")
-    public Member createMember(@RequestBody MemberRequestDto requestDto){
-        Member member =new Member(requestDto);
-        MemberRole role = new MemberRole();
-        role.setRoleName("BASIC");
-        member.setRoles(Arrays.asList(role));
-        member.setPassword(passwordEncoder.encode(member.getPassword()));
-        member.setStatus("정상");
-        System.out.println("정상등록");
-        memberRepository.save(member);
-        return member;
+    @GetMapping("/signup")
+    public String signup() {
+        return "signup";
     }
+
+    @PostMapping("/signup")
+    public String registerUser(MemberRequestDto requestDto) {
+        memberService.registerUser(requestDto);
+        return "redirect:/";
+    }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<MemberResponseDto> show(@PathVariable Long id) {

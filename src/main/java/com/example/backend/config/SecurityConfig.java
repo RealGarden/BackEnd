@@ -54,12 +54,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers("/board/**").authenticated()
                 .antMatchers("/api/members").permitAll()
-                .and().formLogin()
-                .loginPage("/login")
+                .antMatchers("/css/**").permitAll() //css폴더 로그인 없이 허용
+                .antMatchers("/images/**").permitAll() //이미지 폴더 login 없이 허용
+                .and()
+                .formLogin()
+                .loginPage("/api/login")
+                .failureUrl("/api/login/error")
                 .loginProcessingUrl("/login")
                 .defaultSuccessUrl("/")
                 .successHandler(successHandler())
-                .failureUrl("/login")
                 .and()
                 .logout()
                 .and()
