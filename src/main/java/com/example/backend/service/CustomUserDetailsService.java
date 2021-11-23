@@ -15,16 +15,18 @@ import java.util.Optional;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    @Autowired
+    final
     MemberRepository memberRepository;
 
+    public CustomUserDetailsService(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
+    }
 
-    @Override
-    public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
+        Member member = memberRepository.findByUserId(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("Can't find " + userId));
 
-        return Optional.ofNullable(memberRepository.findById(id))
-                .filter(m -> m != null)
-                .map(m -> new SecurityMember(m)).get();
+        return new UserDetailslpml(member);
     }
 
 }

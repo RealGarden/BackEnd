@@ -4,14 +4,18 @@ import com.example.backend.domain.member.MemberRepository;
 import com.example.backend.domain.member.MemberRequestDto;
 import com.example.backend.domain.member.MemberResponseDto;
 import com.example.backend.entity.member.Member;
+import com.example.backend.entity.member.MemberRole;
 import com.example.backend.exception.member.MemberDeleteException;
 import com.example.backend.exception.member.SignUpException;
 import com.example.backend.exception.member.MemberMismatchException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,11 +24,30 @@ public class MemberService {
 
     public static final String NOT_FOUND_MESSAGE = "유저를 찾을수 없습니다.";
     public static final String EMAIL_DUPLICATE_MESSAGE = "중복된 이메일입니다.";
-
+    private PasswordEncoder passwordEncoder;
     private MemberRepository memberRepository;
 
     public MemberService(final MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
+    }
+
+
+    public void registerUser(MemberRequestDto requestDto) {
+        Member member =new Member(requestDto);
+        // 회원 ID 중복 확인
+        Optional<Member> found = memberRepository.findByUserId(member.getId());
+        if (found.isPresent()) {
+            throw new IllegalArgumentException("중복된 사용자 ID 가 존재합니다.");
+        }
+        MemberRole role = new MemberRole();
+        role.setRoleName("BASIC");
+        member.setRoles(Arrays.asList(role));
+        member.setPassword(passwordEncoder.encode(member.getPassword()));
+        member.setStatus("정상");
+
+        String email = requestDto.getEmail();
+        // 사용자 ROLE 확인
+        memberRepository.save(member);
     }
 
     @Transactional
