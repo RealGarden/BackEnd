@@ -1,5 +1,6 @@
 package com.example.backend.controller.Chat;
 
+import com.example.backend.domain.Chat.ChatRoomDto;
 import com.example.backend.entity.chat.ChatRoom;
 import com.example.backend.service.ChatService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +16,12 @@ public class ChatController {
     private ChatService chatService;
 
     @PostMapping
-    public ChatRoom createChatRoom(@RequestParam String name) {
+    public ChatRoomDto createChatRoom(@RequestParam String name) {
         return chatService.createChatRoom(name);
     }
 
     @GetMapping
-    public List<ChatRoom> getAllChatRoom() {
+    public List<ChatRoomDto> getAllChatRoom() {
         return chatService.findAllChatRoom();
     }
 }

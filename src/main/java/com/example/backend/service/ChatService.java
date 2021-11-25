@@ -1,5 +1,6 @@
 package com.example.backend.service;
 
+import com.example.backend.domain.Chat.ChatRoomDto;
 import com.example.backend.entity.chat.ChatRoom;
 import com.example.backend.model.ChatMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,7 +16,7 @@ import java.util.*;
 public class ChatService {
 
     private final ObjectMapper objectMapper;
-    private Map<String, ChatRoom> chatRooms;
+    private Map<String, ChatRoomDto> chatRooms;
 
     @Autowired
     public ChatService(ObjectMapper objectMapper) {
@@ -23,17 +24,17 @@ public class ChatService {
         this.chatRooms = new LinkedHashMap<>();
     }
 
-    public List<ChatRoom> findAllChatRoom() {
+    public List<ChatRoomDto> findAllChatRoom() {
         return new ArrayList<>(chatRooms.values());
     }
 
-    public ChatRoom findChatRoomById(String id) {
+    public ChatRoomDto findChatRoomById(String id) {
         return chatRooms.get(id);
     }
 
-    public ChatRoom createChatRoom(String name) {
+    public ChatRoomDto createChatRoom(String name) {
         String id = UUID.randomUUID().toString();
-        ChatRoom newChatRoom = ChatRoom.of(id, name);
+        ChatRoomDto newChatRoom = ChatRoomDto.handleAction(id, name);
         chatRooms.put(id, newChatRoom);
         return newChatRoom;
     }

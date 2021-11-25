@@ -2,6 +2,8 @@ package com.example.backend.domain.Chat;
 
 import com.example.backend.model.MessageType;
 
+import java.awt.*;
+
 public class Chat {
     private String id;
     private String chatRoomIdx;
