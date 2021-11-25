@@ -2,11 +2,13 @@ package com.example.backend.entity.member;
 
 import com.example.backend.domain.member.MemberRequestDto;
 import com.example.backend.domain.member.MemberValidator;
+import com.example.backend.entity.Authority;
 import com.example.backend.entity.chat.ChatJoinRoom;
 import com.example.backend.entity.chat.ChatRoom;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -19,6 +21,7 @@ import java.util.Set;
 @Entity
 @NoArgsConstructor //기본생성자
 @ToString
+@EntityListeners(AuditingEntityListener.class)
 public class Member {
     public static final String INVALID_PASSWORD_MESSAGE = "비밀번호가 틀렸습니다.";
 
@@ -90,6 +93,17 @@ public class Member {
 
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime logoutAt;
+
+    @ManyToMany
+    @JoinTable(
+            name="user_authority",
+            joinColumns={@JoinColumn(name="user_Id",referencedColumnName = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name="authority_name",referencedColumnName = "authority_name")})
+    private Set<Authority> authorities;
+
+    @Column(name = "activated")
+    private boolean activated;
+
     @Builder
     public Member(String id, String password, String name, int age, String phone, String email, String profile){
         MemberValidator.validateEmail(email);

@@ -1,19 +1,24 @@
 package com.example.backend.service.member;
 
+import com.example.backend.SecurityUtil;
 import com.example.backend.domain.member.MemberRepository;
 import com.example.backend.domain.member.MemberRequestDto;
 import com.example.backend.domain.member.MemberResponseDto;
+import com.example.backend.entity.Authority;
 import com.example.backend.entity.member.Member;
 import com.example.backend.entity.member.MemberRole;
 import com.example.backend.exception.member.MemberDeleteException;
 import com.example.backend.exception.member.SignUpException;
 import com.example.backend.exception.member.MemberMismatchException;
+import javassist.bytecode.DuplicateMemberException;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -32,7 +37,7 @@ public class MemberService {
     }
 
 
-    public void registerUser(MemberRequestDto requestDto) {
+    public MemberResponseDto registerUser(MemberRequestDto requestDto) {
         Member member =new Member(requestDto);
         // 회원 ID 중복 확인
         Optional<Member> found = memberRepository.findByUserId(member.getId());
@@ -48,6 +53,9 @@ public class MemberService {
         String email = requestDto.getEmail();
         // 사용자 ROLE 확인
         memberRepository.save(member);
+
+
+        return MemberResponseDto.from(memberRepository.save(member));
     }
 
     @Transactional
@@ -59,6 +67,7 @@ public class MemberService {
     public Member findByEmail(final String email) {
         return memberRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MESSAGE));
     }
+
 
     @Transactional //수정필요
     public MemberResponseDto findUserResponseById(final Long id) {
@@ -111,5 +120,15 @@ public class MemberService {
 
     public boolean existsById(final Long id) {
         return memberRepository.existsById(id);
+    }
+
+    @Transactional
+    public MemberResponseDto getUserWithAuthorities(String id) {
+        return MemberResponseDto.from(memberRepository.findOneWithAuthoritiesById(id).orElse(null));
+    }
+
+    @Transactional
+    public MemberResponseDto getMyUserWithAuthorities() {
+        return MemberResponseDto.from(SecurityUtil.getCurrentUsername().flatMap(memberRepository::findOneWithAuthoritiesById).orElse(null));
     }
 }

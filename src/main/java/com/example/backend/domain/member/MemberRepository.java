@@ -1,6 +1,7 @@
 package com.example.backend.domain.member;
 
 import com.example.backend.entity.member.Member;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -23,4 +24,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Member findById(String Id);
 
     Optional<Member> findByUserId(String userId);
+
+    //id를 기준으로 권한정보도 같이 가져옴
+    @EntityGraph(attributePaths = "authorities")
+    Optional<Member> findOneWithAuthoritiesById(String id);
 }

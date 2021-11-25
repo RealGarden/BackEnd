@@ -32,13 +32,6 @@ public class MemberApiController {
         return "signup";
     }
 
-    @PostMapping("/signup")
-    public String registerUser(MemberRequestDto requestDto) {
-        memberService.registerUser(requestDto);
-        return "redirect:/";
-    }
-
-
     @GetMapping("/{id}")
     public ResponseEntity<MemberResponseDto> show(@PathVariable Long id) {
         return ResponseEntity.ok(memberService.findUserResponseById(id));
