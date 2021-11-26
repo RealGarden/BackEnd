@@ -47,7 +47,4 @@ public class ChatRoom {
     private Set<ChatJoinRoom> chatJoinRoom;
 
 
-    public static ChatRoom of(String id, String name) {
-
-    }
 }

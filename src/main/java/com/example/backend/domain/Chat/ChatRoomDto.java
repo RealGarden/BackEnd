@@ -14,6 +14,11 @@ public class ChatRoomDto {
     private String name;
     private Set<WebSocketSession> sessions = new HashSet<>();
 
+    public ChatRoomDto(String id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
 
     public ChatRoomDto handleAction(WebSocketSession session, ChatMessage chatMessage, ChatService chatService) {
         if (chatMessage.getMessageType().equals(MessageType.ENTER)) {

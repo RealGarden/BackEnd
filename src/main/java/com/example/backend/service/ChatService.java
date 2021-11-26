@@ -34,7 +34,7 @@ public class ChatService {
 
     public ChatRoomDto createChatRoom(String name) {
         String id = UUID.randomUUID().toString();
-        ChatRoomDto newChatRoom = ChatRoomDto.handleAction(id, name);
+        ChatRoomDto newChatRoom= new ChatRoomDto(id,name);
         chatRooms.put(id, newChatRoom);
         return newChatRoom;
     }
