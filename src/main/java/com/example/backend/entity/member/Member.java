@@ -97,7 +97,7 @@ public class Member {
     @ManyToMany
     @JoinTable(
             name="user_authority",
-            joinColumns={@JoinColumn(name="user_Id",referencedColumnName = "user_id")},
+            joinColumns={@JoinColumn(name="user_Id",referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name="authority_name",referencedColumnName = "authority_name")})
     private Set<Authority> authorities;
 

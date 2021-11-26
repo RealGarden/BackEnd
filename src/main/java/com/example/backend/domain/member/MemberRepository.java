@@ -23,6 +23,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Member findById(String Id);
 
+    @Query("select u.id from Member u")
     Optional<Member> findByUserId(String userId);
 
     //id를 기준으로 권한정보도 같이 가져옴

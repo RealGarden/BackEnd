@@ -1,9 +1,8 @@
 package com.example.backend.config;
 
+import com.example.backend.WebSocketHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.messaging.simp.config.MessageBrokerRegistry;
-import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.config.annotation.*;
 
 
@@ -11,9 +10,12 @@ import org.springframework.web.socket.config.annotation.*;
 @Configuration
 public class WebSocketConfig implements WebSocketConfigurer {
 
-    //@Autowired
+    @Autowired
     private WebSocketHandler webSocketHandler;
 
+    public WebSocketConfig(WebSocketHandler webSocketHandler){
+        this.webSocketHandler=webSocketHandler;
+    }
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry
