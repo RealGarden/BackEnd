@@ -3,20 +3,20 @@ package com.example.backend.controller.member;
 import com.example.backend.domain.member.MemberRepository;
 import com.example.backend.domain.member.MemberRequestDto;
 import com.example.backend.domain.member.MemberResponseDto;
-import com.example.backend.entity.member.Member;
+import com.example.backend.domain.member.MyPageResponse;
 import com.example.backend.service.member.LoginMember;
 import com.example.backend.service.member.MemberCreateService;
 import com.example.backend.service.member.MemberService;
-import com.example.backend.service.member.MemberSession;
+import com.example.backend.entity.member.MemberSession;
+import com.example.backend.service.member.MyPageService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.net.URI;
 import java.util.List;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @RestController
 @RequestMapping("/api")
@@ -25,46 +25,38 @@ public class MemberController {
     private final MemberService memberService;
     private final MemberCreateService memberCreateService;
     private final MemberRepository memberRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final MyPageService myPageService;
 
     public MemberController(final MemberService memberService,
                             final MemberCreateService memberCreateService,
                             final MemberRepository memberRepository,
-                            final PasswordEncoder passwordEncoder) {
+                            final MyPageService myPageService
+                            ) {
         this.memberService = memberService;
         this.memberCreateService=memberCreateService;
         this.memberRepository=memberRepository;
-        this.passwordEncoder=passwordEncoder;
+        this.myPageService = myPageService;
+
     }
 
     @GetMapping("/signup")
     public String signup() {
-        return "signup";
+        return "/api/signup";
     }
 
 
     @PostMapping("/signup")
-    public String signup(
+    public ResponseEntity<MemberRequestDto> signup(
             @Valid @RequestBody MemberRequestDto memberRequestDto
             ) {
-        memberService.registerUser(memberRequestDto);
-        return "redirect:/";
+       MemberResponseDto memberResponseDto=memberCreateService.create(memberRequestDto);
+        URI uri = linkTo(MemberController.class).slash(memberResponseDto.getId()).toUri();
+       return ResponseEntity.created(uri).body(memberRequestDto);
     }
 
-    @GetMapping("/user")
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    public ResponseEntity<MemberResponseDto> getMyUserInfo(HttpServletRequest request) {
-        return ResponseEntity.ok(memberService.getMyUserWithAuthorities());
-    }
-
-    @GetMapping("/user/{username}")
-    @PreAuthorize("hasAnyRole('ADMIN')")
-    public ResponseEntity<MemberResponseDto> getUserInfo(@PathVariable String Id) {
-        return ResponseEntity.ok(memberService.getUserWithAuthorities(Id));
-    }
 
     @GetMapping("/{id}")
-    public ResponseEntity<MemberResponseDto> show(@PathVariable Long id) {
+    public ResponseEntity<MemberResponseDto> show(@PathVariable String id) {
         return ResponseEntity.ok(memberService.findUserResponseById(id));
 
     }
@@ -72,6 +64,11 @@ public class MemberController {
     @GetMapping
     public ResponseEntity<List<MemberResponseDto>> list(@LoginMember MemberSession memberSession) {
         return ResponseEntity.ok(memberService.findAllUsersWithoutCurrentUser(memberSession.getId()));
+    }
+
+    @GetMapping("/{id}/mypage")
+    public ResponseEntity<MyPageResponse> myPage(@PathVariable String id) {
+        return ResponseEntity.ok(myPageService.findUserResponseById(id));
     }
 
 }

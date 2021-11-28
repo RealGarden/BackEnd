@@ -37,14 +37,14 @@ public class FriendRelationService {
     public List<FriendRelationship> save(final FriendRelationCreate friendCreate) {
         FriendRequest friendRequest = friendRequestService.findById(friendCreate.getFriendRelationId());
 
-        checkAlreadyFriend(friendRequest.getSenderId().getMemberIdx(), friendRequest.getReceiverId().getMemberIdx());
+        checkAlreadyFriend(friendRequest.getSenderId().getId(), friendRequest.getReceiverId().getId());
 
         friendRequestService.delete(friendRequest);
         return friendRepository.saveAll(friendRequest.createBidirectionalFriends());
     }
 
     @Transactional(readOnly = true)
-    public List<FriendRelationResponse> findAllFriendResponseByRelatingUserId(final Long id) {
+    public List<FriendRelationResponse> findAllFriendResponseByRelatingUserId(final String id) {
         return friendRepository.findAllByUserId(id).stream()
                 .map(friend -> FriendRelationResponse.from(friend, memberService.findById(friend.getFriendId().getMemberIdx())))
                 .collect(Collectors.toList());
@@ -56,11 +56,11 @@ public class FriendRelationService {
                 .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_FRIEND_MESSAGE));
     }
 
-    public void deleteById(final Long friendId, final Long memberSessionId) {
-        FriendRelationship friend = friendRepository.findById(friendId)
+    public void deleteById(final String friendId, final String memberSessionId) {
+        FriendRelationship friend = friendRepository.findByUserId(friendId)
                 .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_FRIEND_MESSAGE));
         FriendRelationship reverseFriend = friendRepository
-                .findByUserIdAndFriendId(friend.getUserId().getMemberIdx(), friend.getFriendId().getMemberIdx())
+                .findByUserIdAndFriendId(friend.getUserId().getId() ,friend.getFriendId().getId())
                 .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_FRIEND_MESSAGE));
 
         checkUserId(memberSessionId, friend, reverseFriend);
@@ -69,19 +69,19 @@ public class FriendRelationService {
         friendRepository.delete(reverseFriend);
     }
 
-    private void checkUserId(final Long memberSessionId, final FriendRelationship friend, final FriendRelationship reverseFriend) {
+    private void checkUserId(final String memberSessionId, final FriendRelationship friend, final FriendRelationship reverseFriend) {
         if (!(friend.matchUserId(memberSessionId) && reverseFriend.matchFriendId(memberSessionId))) {
             throw new MismatchedMemberException(MISMATCHED_USER_MESSAGE);
         }
     }
 
-    public void checkAlreadyFriend(final Long relatingId, final Long relatedId) {
+    public void checkAlreadyFriend(final String relatingId, final String relatedId) {
         if (isAlreadyFriend(relatingId, relatedId)) {
             throw new AlreadyFriendException(ALREADY_FRIEND_MESSAGE);
         }
     }
 
-    public boolean isAlreadyFriend(Long relatingId, Long relatedId) {
+    public boolean isAlreadyFriend(String relatingId, String relatedId) {
         return friendRepository.findByUserIdAndFriendId(relatingId, relatedId).isPresent();
     }
 

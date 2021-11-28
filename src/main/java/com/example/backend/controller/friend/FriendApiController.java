@@ -7,7 +7,7 @@ import com.example.backend.domain.friend.FriendRequestResponse;
 import com.example.backend.service.friend.FriendRelationService;
 import com.example.backend.service.friend.FriendRequestService;
 import com.example.backend.service.member.LoginMember;
-import com.example.backend.service.member.MemberSession;
+import com.example.backend.entity.member.MemberSession;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,13 +33,13 @@ public class FriendApiController {
     @PostMapping("/requests")
     public ResponseEntity<FriendRequestResponse> createRequest(@RequestBody FriendRequestCreate friendRequestCreate,
                                                            @LoginMember MemberSession memberSession) {
-        friendRelationService.checkAlreadyFriend(friendRequestCreate.getReceiver().getMemberIdx(), memberSession.getId());
+        friendRelationService.checkAlreadyFriend(friendRequestCreate.getReceiver().getId(), memberSession.getId());
         return ResponseEntity.created(null)
                 .body(friendRequestService.save(memberSession.getId(), friendRequestCreate));
     }
 
     @DeleteMapping("/requests/{id}")
-    public ResponseEntity deleteRequest(@PathVariable Long id, @LoginMember MemberSession memberSession) {
+    public ResponseEntity deleteRequest(@PathVariable String id, @LoginMember MemberSession memberSession) {
         friendRequestService.deleteById(id, memberSession.getId());
         return ResponseEntity.noContent().build();
     }
@@ -56,7 +56,7 @@ public class FriendApiController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity delete(@PathVariable Long id, @LoginMember MemberSession memberSession) {
+    public ResponseEntity delete(@PathVariable String id, @LoginMember MemberSession memberSession) {
         friendRelationService.deleteById(id, memberSession.getId());
         return ResponseEntity.noContent().build();
     }

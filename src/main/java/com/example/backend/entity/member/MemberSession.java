@@ -1,6 +1,5 @@
-package com.example.backend.service.member;
+package com.example.backend.entity.member;
 
-import com.example.backend.entity.member.Member;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,21 +14,18 @@ public class MemberSession implements HttpSessionBindingListener {
 
     public static final String MEMBER_SESSION_KEY = "loginUser";
 
-    private Long id;
-    private String email;
+    private String id;
     private String name;
 
     @Builder
-    private MemberSession(Long id, String email, String name) {
+    private MemberSession(String id, String name) {
         this.id = id;
-        this.email = email;
         this.name = name;
     }
 
     public static MemberSession from(Member member) {
         return MemberSession.builder()
-                .id(member.getMemberIdx())
-                .email(member.getEmail())
+                .id(member.getId())
                 .name(member.getName())
                 .build();
     }

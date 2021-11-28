@@ -4,14 +4,11 @@ import com.example.backend.SecurityUtil;
 import com.example.backend.domain.member.MemberRepository;
 import com.example.backend.domain.member.MemberRequestDto;
 import com.example.backend.domain.member.MemberResponseDto;
-import com.example.backend.entity.Authority;
 import com.example.backend.entity.member.Member;
 import com.example.backend.entity.member.MemberRole;
 import com.example.backend.exception.member.MemberDeleteException;
 import com.example.backend.exception.member.SignUpException;
 import com.example.backend.exception.member.MemberMismatchException;
-import javassist.bytecode.DuplicateMemberException;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -37,32 +34,15 @@ public class MemberService {
     }
 
 
-    public MemberResponseDto registerUser(MemberRequestDto requestDto) {
-        Member member =new Member(requestDto);
-        // 회원 ID 중복 확인
-        Optional<Member> found = memberRepository.findByUserId(member.getId());
-        if (found.isPresent()) {
-            throw new IllegalArgumentException("중복된 사용자 ID 가 존재합니다.");
-        }
-        MemberRole role = new MemberRole();
-        role.setRoleName("BASIC");
-        member.setRoles(Arrays.asList(role));
-        member.setPassword(passwordEncoder.encode(member.getPassword()));
-        member.setStatus("정상");
-
-        String email = requestDto.getEmail();
-        // 사용자 ROLE 확인
-        memberRepository.save(member);
-
-
-        return MemberResponseDto.from(memberRepository.save(member));
-    }
-
     @Transactional
     public Member findById(final Long id) {
         return memberRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MESSAGE));
     }
 
+    @Transactional
+    public Member findByUserId(final String id){
+        return memberRepository.findMemberById(id).orElseThrow(()->new EntityNotFoundException(NOT_FOUND_MESSAGE));
+    }
     @Transactional
     public Member findByEmail(final String email) {
         return memberRepository.findByEmail(email).orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_MESSAGE));
@@ -70,8 +50,8 @@ public class MemberService {
 
 
     @Transactional //수정필요
-    public MemberResponseDto findUserResponseById(final Long id) {
-        return MemberResponseDto.from(findById(id));
+    public MemberResponseDto findUserResponseById(final String id) {
+        return MemberResponseDto.from(findByUserId(id));
     }
 
     public Member save(final MemberRequestDto memberRequestDto) { //멤버만드는거같은뎅
@@ -89,7 +69,7 @@ public class MemberService {
         }
     }
 
-    public void delete(final Long userId, final Long sessionUserId) { //유저 삭제
+    public void delete(final String userId, final String sessionUserId) { //유저 삭제
         matchId(userId, sessionUserId);
         try {
             memberRepository.deleteById(userId);
@@ -98,16 +78,16 @@ public class MemberService {
         }
     }
 
-    private void matchId(final Long userId, final Long sessionUserId) {
+    private void matchId(final String userId, final String sessionUserId) {
         if (userId == null || !userId.equals(sessionUserId)) {
             throw new MemberMismatchException();
         }
     }
 
 
-    public List<MemberResponseDto> findAllUsersWithoutCurrentUser(final Long id) {
+    public List<MemberResponseDto> findAllUsersWithoutCurrentUser(final String id) {
         return memberRepository.findAll().stream()
-                .filter(user -> !user.matchId(id))
+                .filter(user -> !user.matchUserId(id))
                 .map(MemberResponseDto::from)
                 .collect(Collectors.toList());
     }
@@ -118,17 +98,9 @@ public class MemberService {
                 .collect(Collectors.toList());
     }
 
-    public boolean existsById(final Long id) {
+    public boolean existsById(final String id) {
         return memberRepository.existsById(id);
     }
 
-    @Transactional
-    public MemberResponseDto getUserWithAuthorities(String id) {
-        return MemberResponseDto.from(memberRepository.findOneWithAuthoritiesById(id).orElse(null));
-    }
 
-    @Transactional
-    public MemberResponseDto getMyUserWithAuthorities() {
-        return MemberResponseDto.from(SecurityUtil.getCurrentUsername().flatMap(memberRepository::findOneWithAuthoritiesById).orElse(null));
-    }
 }

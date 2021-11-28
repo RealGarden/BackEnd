@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface MemberRepository extends JpaRepository<Member, Long> {
+public interface MemberRepository extends JpaRepository<Member, String> {
 
     Optional<Member> findByEmail(String email);
 
@@ -21,12 +21,10 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     //Optional<Member> findById(String id);
 
-    Member findById(String Id);
+    @Query("select u.memberIdx from Member u where u.memberIdx = :userId")
+    Optional<Member> findById(@Param("userId")Long Idx);
 
-    @Query("select u.id from Member u")
-    Optional<Member> findByUserId(String userId);
+    Optional<Member> findMemberById(@Param("userId")String userId);
 
-    //id를 기준으로 권한정보도 같이 가져옴
-    @EntityGraph(attributePaths = "authorities")
-    Optional<Member> findOneWithAuthoritiesById(String id);
+
 }

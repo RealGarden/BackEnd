@@ -2,7 +2,6 @@ package com.example.backend.entity.member;
 
 import com.example.backend.domain.member.MemberRequestDto;
 import com.example.backend.domain.member.MemberValidator;
-import com.example.backend.entity.Authority;
 import com.example.backend.entity.chat.ChatJoinRoom;
 import com.example.backend.entity.chat.ChatRoom;
 import lombok.*;
@@ -28,6 +27,7 @@ public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long memberIdx;
+
     @Column(nullable = false,columnDefinition = "varchar(13)")
     private String id;
 
@@ -81,11 +81,11 @@ public class Member {
     private List<MemberRole> roles;
 
     @OneToMany(cascade= CascadeType.ALL, fetch=FetchType.EAGER)
-    @JoinColumn(name = "room_id")
+    @JoinColumn(name = "room_id",nullable=true)
     private Set<ChatJoinRoom> chatJoinRooms;
 
     @OneToMany(cascade= CascadeType.ALL, fetch=FetchType.EAGER)
-    @JoinColumn(name="user_idx")
+    @JoinColumn(name="user_idx",nullable=true)
     private Set<ChatRoom> chatRoom;
 
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
@@ -94,15 +94,6 @@ public class Member {
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime logoutAt;
 
-    @ManyToMany
-    @JoinTable(
-            name="user_authority",
-            joinColumns={@JoinColumn(name="user_Id",referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name="authority_name",referencedColumnName = "authority_name")})
-    private Set<Authority> authorities;
-
-    @Column(name = "activated")
-    private boolean activated;
 
     @Builder
     public Member(String id, String password, String name, int age, String phone, String email, String profile){
@@ -117,6 +108,7 @@ public class Member {
         this.phone=phone;
         this.email = email;
         this.profile=profile;
+        this.status="0";
         this.eventAlarm=true;
         this.friendAlarm=true;
         this.talkAlarm=true;
@@ -130,6 +122,7 @@ public class Member {
         this.age=requestDto.getAge();
         this.phone=requestDto.getPhone();
         this.email =requestDto.getEmail();
+        this.status="0";
         this.eventAlarm=true;
         this.friendAlarm=true;
         this.talkAlarm=true;
@@ -151,7 +144,7 @@ public class Member {
     }
 
     public boolean matchId(Long id) {
-        return (id != null) && (id.equals(getId()));
+        return (id != null) && (id.equals(getMemberIdx()));
     }
 
     public void uploadProfile(String profile) {
@@ -171,4 +164,5 @@ public class Member {
     }
 
 
+    public boolean matchUserId(String id) {return (id != null) && (id.equals(getId()));}
 }

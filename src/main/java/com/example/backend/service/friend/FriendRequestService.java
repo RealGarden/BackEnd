@@ -33,25 +33,25 @@ public class FriendRequestService {
     }
 
 
-    public FriendRequestResponse save(final Long senderId, final FriendRequestCreate friendRequestCreate) {
-        Member sender = memberService.findById(senderId);
+    public FriendRequestResponse save(final String senderId, final FriendRequestCreate friendRequestCreate) {
+        Member sender = memberService.findByUserId(senderId);
         Member receiver = memberService.findById(friendRequestCreate.getReceiver().getMemberIdx());
 
-        checkFriendAskExist(senderId, friendRequestCreate.getReceiver().getMemberIdx(), ALREADY_FRIEND_ASK_EXIST_MESSAGE);
-        checkFriendAskExist(friendRequestCreate.getReceiver().getMemberIdx(), senderId, ALREADY_OTHER_FRIEND_ASK_EXIST_MESSAGE);
+        checkFriendAskExist(senderId, friendRequestCreate.getReceiver().getId(), ALREADY_FRIEND_ASK_EXIST_MESSAGE);
+        checkFriendAskExist(friendRequestCreate.getReceiver().getId(), senderId, ALREADY_OTHER_FRIEND_ASK_EXIST_MESSAGE);
 
         FriendRequest friendRequest = friendRequestRepository.save(friendRequestCreate.toEntity(sender));
         return FriendRequestResponse.from(friendRequest, sender, receiver);
     }
 
-    private void checkFriendAskExist(final Long senderId, final Long receiverId, final String message) {
+    private void checkFriendAskExist(final String senderId, final String receiverId, final String message) {
         if (friendRequestRepository.findBySenderIdAndReceiverId(senderId, receiverId).isPresent()) {
             throw new FriendAskFailException(message);
         }
     }
 
     @Transactional(readOnly = true)
-    public List<FriendRequestResponse> findAllByReceiverId(final Long id) {
+    public List<FriendRequestResponse> findAllByReceiverId(final String id) {
         return friendRequestRepository.findAllByReceiverId(id).stream()
                 .map(friendAsk -> FriendRequestResponse.from(friendAsk,
                         memberService.findById(friendAsk.getSenderId().getMemberIdx()),
@@ -60,8 +60,8 @@ public class FriendRequestService {
     }
 
     @Transactional(readOnly = true)
-    public FriendRequest findById(final Long friendRequestId) {
-        return friendRequestRepository.findById(friendRequestId)
+    public FriendRequest findById(final String friendRequestId) {
+        return friendRequestRepository.findByUserId(friendRequestId)
                 .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND_FRIEND_ASK_MESSAGE));
     }
 
@@ -69,19 +69,19 @@ public class FriendRequestService {
         friendRequestRepository.delete(friendRequest);
     }
 
-    public void deleteById(final Long friendRequestId, final Long userSessionId) {
+    public void deleteById(final String friendRequestId, final String userSessionId) {
         FriendRequest friendRequest = findById(friendRequestId);
         checkUserId(friendRequest, userSessionId);
         friendRequestRepository.delete(friendRequest);
     }
 
-    private void checkUserId(final FriendRequest friendRequest, final Long userSessionId) {
+    private void checkUserId(final FriendRequest friendRequest, final String userSessionId) {
         if (!friendRequest.matchUserId(userSessionId)) {
             throw new MismatchedMemberException(MISMATCHED_USER_MESSAGE);
         }
     }
 
-    public void deleteBySenderIdOrReceiverId(final Long userId) {
+    public void deleteBySenderIdOrReceiverId(final String userId) {
         friendRequestRepository.deleteBySenderIdOrReceiverId(userId, userId);
     }
 }

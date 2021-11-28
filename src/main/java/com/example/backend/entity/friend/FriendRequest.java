@@ -31,8 +31,8 @@ public class FriendRequest {
     private FriendRequest(Member senderId,Member receiverId){
        validateNotNull(senderId);
        validateNotNull(receiverId);
-       this.senderId.setMemberIdx(senderId.getMemberIdx());
-       this.receiverId.setMemberIdx(receiverId.getMemberIdx());
+       this.senderId.setId(senderId.getId());
+       this.receiverId.setId(receiverId.getId());;
     }
     private void validateNotNull(Member userId){
         if(userId.getId()==null)
@@ -52,7 +52,7 @@ public class FriendRequest {
         );
     }
 
-    public boolean matchUserId(Long userId) {
+    public boolean matchUserId(String userId) {
         return receiverId.equals(userId) || senderId.equals(userId);
     }
 

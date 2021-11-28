@@ -8,10 +8,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class FriendRelationCreate {
 
-    private Long friendRelationId;
+    private String friendRelationId;
 
     @Builder
-    public FriendRelationCreate(Long friendRelationId) {
+    public FriendRelationCreate(String friendRelationId) {
         this.friendRelationId = friendRelationId;
     }
 }
